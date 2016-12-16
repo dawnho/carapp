@@ -6,137 +6,223 @@
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
+    <link rel="stylesheet" href="/css/style.css">
+
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
 
   <body>
     <div class="container">
-
-      <h1>Maintenance Schedule</h1>
-      <div class="row">
-        <div class="col-md-2">
-          Year:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="year" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Year
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="year">
-              <li><a href="#">Action</a></li>
-            </ul>
+      <div id="lookup-form">
+        <h1>Maintenance Schedule</h1>
+        <div class="year">
+          <div class="form-group">
+            <label class="control-label" for="year">Vehicle Year:</label>
+            <select class="form-control" id="year">
+              <option value="" disabled selected>Select Year</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Vehicle Make:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="make" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Make
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="make">
-              <li><a href="#">Action</a></li>
-            </ul>
+        <div class="make">
+          <div class="form-group">
+            <label class="control-label" for="make">Vehicle Make:</label>
+            <select class="form-control" id="make" disabled>
+              <option value="" disabled selected>Select Make</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Vehicle Model:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="model" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Model
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="model">
-              <li><a href="#">Model</a></li>
-            </ul>
+        <div class="model">
+          <div class="form-group">
+            <label class="control-label" for="model">Vehicle Model:</label>
+            <select class="form-control" id="model" disabled>
+              <option value="" disabled selected>Select Model</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Vehicle Trim:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="trim" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Trim
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="trim">
-              <li><a href="#">Action</a></li>
-            </ul>
+        <div class="trim">
+          <div class="form-group">
+            <label class="control-label" for="trim">Vehicle Trim:</label>
+            <select class="form-control" id="trim" disabled>
+              <option value="" disabled selected>Select Trim</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Vehicle Engine:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="engine" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Engine
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="engine">
-              <li><a href="#">Action</a></li>
-            </ul>
+        <div class="engine">
+          <div class="form-group">
+            <label class="control-label" for="engine">Vehicle Engine:</label>
+            <select class="form-control" id="engine" disabled>
+              <option value="" disabled selected>Select Engine</option>
+            </select>
           </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Vehicle Transmission:
-        </div>
-        <div class="col-md-10">
-          <div class="dropdown">
-            <button class="btn btn-default dropdown-toggle" type="button" id="transmission" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-              Select Transmission
-              <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="transmission">
-              <li><a href="#">Action</a></li>
-            </ul>
+        <div class="transmission">
+          <div class="form-group">
+            <label class="control-label" for="transmission">Vehicle Transmission:</label>
+            <select class="form-control" id="transmission" disabled>
+              <option value="" disabled selected>Select Transmission</option>
+            </select>
           </div>
         </div>
+        <div class="mileage">
+          <div class="form-group">
+            <label class="control-label" for="mileage">Current Mileage:</label>
+            <input type="text" id="mileage" class="form-control" placeholder="ex. 45,000">
+          </div>
+        </div>
+        <div class="zip">
+          <div class="form-group">
+            <label class="control-label" for="zip">Zip Code:</label>
+            <input type="text" id="zip" class="form-control" placeholder="ex. 94110">
+          </div>
+        </div>
+        <div class="form-buttons">
+          <button id="clear" class="btn btn-default btn-block">Clear</button>
+          <button id="submit" type="submit" class="btn btn-primary btn-block">Go</button>
+        </div>
       </div>
-      <div class="row">
-        <div class="col-md-2">
-          Current Mileage:
-        </div>
-        <div class="col-md-10">
-          <input type="text" id="mileage" class="form-control" placeholder="ex. 45,000">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-2">
-          Zip Code:
-        </div>
-        <div class="col-md-10">
-          <input type="text" id="zip" class="form-control" placeholder="ex. 94110">
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-10 offset-1">
-          <button type="button" class="btn btn-default">Go</button>
-        </div>
+      <div id="results-table">
       </div>
     </div>
     <script>
-      $('.dropdown-toggle').dropdown();
+      var apiKey = 'y4hdend9nry4x2ghwvx76hmv';
+      var clearableFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
+      var years = [];
+      for (var i = (new Date).getFullYear(); i>= 1990; i--) {
+        years.push(i);
+      }
+      var year, modelResData, trim = null;
+
+      $('#clear').click(function() {
+        disableAndClearFrom('make');
+        $('#year').val($('#year option:first').val());
+      });
+
+      function clearSelect(fieldName) {
+        $('.' + fieldName + ' select')
+          .find('option')
+          .remove()
+          .end()
+          .append('<option value="" disabled selected>Select ' + fieldName + '</option>');
+      }
+      function createOptions(fieldList, selectEl) {
+        $.each(fieldList, function(i) {
+          var id = '';
+          if (fieldList[i].hasOwnProperty('id')) {
+            id = fieldList[i]['id'];
+          }
+          $('<option/>')
+            .text(fieldList[i]['name'])
+            .data('id', id)
+            .appendTo(selectEl);
+        });
+      }
+      function disableAndClearFrom(field) {
+        var index = $.inArray(field, clearableFields);
+        for (var i = index; i < clearableFields.length; i++) {
+          $('#' + clearableFields[i]).prop('disabled', true);
+          clearSelect(clearableFields[i]);
+        }
+      }
+
+      var yearSelect = $('.year select');
+      $.each(years, function(i) {
+        $('<option/>')
+          .text(years[i])
+          .appendTo(yearSelect);
+      });
+
+      var makeSelect = $('.make select');
+      yearSelect.change(function() {
+        $('.year option:selected').each(function() {
+          year = $(this).text();
+          $.get('http://api.edmunds.com/api/vehicle/v2/makes',
+            {
+              year: year,
+              fmt: 'json',
+              api_key: apiKey
+            },
+            function(res) {
+              disableAndClearFrom('make');
+              createOptions(res['makes'], makeSelect);
+              makeSelect.prop('disabled', false);
+            });
+        });
+      });
+
+      var modelSelect = $('.model select');
+      makeSelect.change(function() {
+        $('.make option:selected').each(function() {
+          $.get('http://api.edmunds.com/api/vehicle/v2/' + $(this).text() + '/models',
+            {
+              year: year,
+              fmt: 'json',
+              api_key: apiKey
+            },
+            function(res) {
+              modelResData = res['models'];
+              disableAndClearFrom('model');
+              createOptions(res['models'], modelSelect);
+              modelSelect.removeAttr('disabled');
+            });
+        });
+      });
+
+      var trimSelect = $('.trim select');
+      modelSelect.change(function() {
+        $('.model option:selected').each(function() {
+          model = $(this).text();
+          for (var i = 0; i < modelResData.length; i++) {
+            if (modelResData[i].name == model) {
+              disableAndClearFrom('trim');
+              createOptions(modelResData[i]['years'][0]['styles'], trimSelect);
+              trimSelect.removeAttr('disabled');
+              break;
+            }
+          }
+        });
+      });
+
+      var engineSelect = $('.engine select');
+      var transmissionSelect = $('.transmission select');
+      trimSelect.change(function() {
+        $('.trim option:selected').each(function() {
+          id = $(this).data('id');
+          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + id + '/engines',
+            {
+              fmt: 'json',
+              api_key: apiKey
+            },
+            function(res) {
+              $.each(res['engines'], function(i) {
+                $('<option/>')
+                  .text(res['engines'][i]['cylinder'] + ' Cyl ' + res['engines'][i]['size'] + ' Liter')
+                  .appendTo(engineSelect);
+              });
+              if (res['engines'].length == 1) {
+                $('#engine').val($('#engine option:eq(1)').val());
+              }
+              engineSelect.removeAttr('disabled');
+            });
+          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + id + '/transmissions',
+            {
+              fmt: 'json',
+              api_key: apiKey
+            },
+            function(res) {
+              $.each(res['transmissions'], function(i) {
+                $('<option/>')
+                  .text(res['transmissions'][i]['transmissionType'])
+                  .appendTo(transmissionSelect);
+              });
+              if (res['transmissions'].length == 1) {
+                $('#transmission').val($('#transmission option:eq(1)').val());
+              }
+              transmissionSelect.removeAttr('disabled');
+            });
+        });
+      });
     </script>
   </body>
 
-  <script>window.jQuery||document.write('<script src="../assets/js/vendor/jquery.min.js"><\/script>')
-  </script>
 </html>
