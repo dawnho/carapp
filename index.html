@@ -1,17 +1,142 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Car Depot</title>
-    <!-- Latest compiled and minified CSS -->
+    <title>Car Maintenance Guide</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
-    <!-- Optional theme -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 
-    <!-- Latest compiled and minified JavaScript -->
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
   </head>
 
   <body>
+    <div class="container">
+
+      <h1>Maintenance Schedule</h1>
+      <div class="row">
+        <div class="col-md-2">
+          Year:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="year" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Year
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="year">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Vehicle Make:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="make" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Make
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="make">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Vehicle Model:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="model" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Model
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="model">
+              <li><a href="#">Model</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Vehicle Trim:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="trim" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Trim
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="trim">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Vehicle Engine:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="engine" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Engine
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="engine">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Vehicle Transmission:
+        </div>
+        <div class="col-md-10">
+          <div class="dropdown">
+            <button class="btn btn-default dropdown-toggle" type="button" id="transmission" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+              Select Transmission
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="transmission">
+              <li><a href="#">Action</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Current Mileage:
+        </div>
+        <div class="col-md-10">
+          <input type="text" id="mileage" class="form-control" placeholder="ex. 45,000">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-2">
+          Zip Code:
+        </div>
+        <div class="col-md-10">
+          <input type="text" id="zip" class="form-control" placeholder="ex. 94110">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-10 offset-1">
+          <button type="button" class="btn btn-default">Go</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      $('.dropdown-toggle').dropdown();
+    </script>
   </body>
+
+  <script>window.jQuery||document.write('<script src="../assets/js/vendor/jquery.min.js"><\/script>')
+  </script>
 </html>
