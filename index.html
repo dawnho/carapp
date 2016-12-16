@@ -95,7 +95,7 @@
       <div id="form-errors"></div>
     </div>
     <script>
-      var apiKey = 'y4hdend9nry4x2ghwvx76hmv';
+      var apiKey = 'ENTER_API_KEY_HERE';
       var selectFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var years = [];
@@ -228,7 +228,7 @@
       /*
        * Form filling helper methods
        */
-      function clearSelect(fieldName) {
+      function resetSelectOptions(fieldName) {
         formFields[fieldName]
           .find('option')
           .remove()
@@ -258,7 +258,7 @@
         var index = $.inArray(field, selectFields);
         for (var i = index; i < selectFields.length; i++) {
           $('#' + selectFields[i]).prop('disabled', true);
-          clearSelect(selectFields[i]);
+          resetSelectOptions(selectFields[i]);
         }
       }
 
@@ -310,7 +310,7 @@
       formFields.model.change(function() {
         clearError('model');
         $('.model option:selected').each(function() {
-          model = $(this).text();
+          var model = $(this).text();
           id = $(this).data('modelyear');
           for (var i = 0; i < modelResData.length; i++) {
             if (modelResData[i].name == model) {
