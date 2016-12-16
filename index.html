@@ -95,16 +95,19 @@
       <div id="form-errors"></div>
     </div>
     <script>
-      var apiKey = 'ENTER_API_KEY_HERE';
-      var clearableFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
+      var apiKey = 'y4hdend9nry4x2ghwvx76hmv';
+      var selectFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var years = [];
-      var resultsTable = $('#results-table');
-
       for (var i = (new Date).getFullYear(); i>= 1990; i--) {
         years.push(i);
       }
       var year, modelResData, id, styleId = null;
+      var resultsTable = $('#results-table');
+      var selectBoxes = {};
+      selectFields.forEach(function(field) {
+        selectBoxes[field] = $('.' + field + ' select');
+      });
 
       /*
        * Form Validation helper methods
@@ -140,12 +143,13 @@
       };
 
       /*
-       * Form Submission and Clearing
+       * Form Submission and Form Clear
        */
+      var zipRegex = /^\d{5}$/;
       $('#lookup-form').on("submit", function(e) {
         e.preventDefault();
 
-        // Clear form
+        // Emptying old results and clearing errors
         $('#form-errors').text('');
         $('#results-table').text('');
         $('.form-group').removeClass('has-error');
@@ -159,11 +163,12 @@
             hasError = true;
           }
         });
-        if (!isInteger(data['mileage']) || data['mileage'] > 300000) {
+        if (!isInteger(data.mileage) || data.mileage > 300000) {
           addError('mileage');
           hasError = true;
         }
-        if (!isInteger(data['zip']) || data['zip'] > 100000 || data['zip'] < 10000) {
+
+        if (!zipRegex.test(data.zip)) {
           addError('zip');
           hasError = true;
         }
@@ -178,7 +183,7 @@
               api_key: apiKey
             },
             function(res) {
-              if (res['actionHolder'].length < 1) {
+              if (res.actionHolder.length < 1) {
                 $('#form-errors').text('Maintenance schedule could not be found for this vehicle.');
               }
 
@@ -195,7 +200,7 @@
                 .appendTo(tr);
 
               // Feeding in the data
-              res['actionHolder'].forEach(function(el) {
+              res.actionHolder.forEach(function(el) {
                 var tbody = $('<thead/>')
                 .appendTo(resultsTable);
                 var tr = $('<tr/>')
@@ -207,7 +212,7 @@
                   .text(el.item)
                   .appendTo(tr);
               });
-              console.log(res['actionHolder']);
+              console.log(res.actionHolder);
             });
       });
 
@@ -236,13 +241,13 @@
           var optionId = '';
           var modelYearId = '';
           if (fieldList[i].hasOwnProperty('id')) {
-            optionId = fieldList[i]['id'];
+            optionId = fieldList[i].id;
           }
           if (fieldList[i].hasOwnProperty('years')) {
-            modelYearId = fieldList[i]['years'][0]['id'];
+            modelYearId = fieldList[i].years[0].id;
           }
           $('<option/>')
-            .text(fieldList[i]['name'])
+            .text(fieldList[i].name)
             .data('id', optionId)
             .data('modelyear', modelYearId)
             .appendTo(selectEl);
@@ -250,25 +255,23 @@
       }
 
       function disableAndClearFormFieldsFrom(field) {
-        var index = $.inArray(field, clearableFields);
-        for (var i = index; i < clearableFields.length; i++) {
-          $('#' + clearableFields[i]).prop('disabled', true);
-          clearSelect(clearableFields[i]);
+        var index = $.inArray(field, selectFields);
+        for (var i = index; i < selectFields.length; i++) {
+          $('#' + selectFields[i]).prop('disabled', true);
+          clearSelect(selectFields[i]);
         }
       }
 
       /*
        * Form field action methods
        */
-      var yearSelect = $('.year select');
       $.each(years, function(i) {
         $('<option/>')
           .text(years[i])
-          .appendTo(yearSelect);
+          .appendTo(selectBoxes.year);
       });
 
-      var makeSelect = $('.make select');
-      yearSelect.change(function() {
+      selectBoxes.year.change(function() {
         clearError('year');
         $('.year option:selected').each(function() {
           year = $(this).text();
@@ -280,14 +283,13 @@
             },
             function(res) {
               disableAndClearFormFieldsFrom('make');
-              createOptions(res['makes'], makeSelect);
-              makeSelect.prop('disabled', false);
+              createOptions(res.makes, selectBoxes.make);
+              selectBoxes.make.prop('disabled', false);
             });
         });
       });
 
-      var modelSelect = $('.model select');
-      makeSelect.change(function() {
+      selectBoxes.make.change(function() {
         clearError('make');
         $('.make option:selected').each(function() {
           $.get('http://api.edmunds.com/api/vehicle/v2/' + $(this).text() + '/models',
@@ -297,16 +299,15 @@
               api_key: apiKey
             },
             function(res) {
-              modelResData = res['models'];
+              modelResData = res.models;
               disableAndClearFormFieldsFrom('model');
-              createOptions(res['models'], modelSelect);
-              modelSelect.removeAttr('disabled');
+              createOptions(res.models, selectBoxes.model);
+              selectBoxes.model.removeAttr('disabled');
             });
         });
       });
 
-      var trimSelect = $('.trim select');
-      modelSelect.change(function() {
+      selectBoxes.model.change(function() {
         clearError('model');
         $('.model option:selected').each(function() {
           model = $(this).text();
@@ -314,17 +315,15 @@
           for (var i = 0; i < modelResData.length; i++) {
             if (modelResData[i].name == model) {
               disableAndClearFormFieldsFrom('trim');
-              createOptions(modelResData[i]['years'][0]['styles'], trimSelect);
-              trimSelect.removeAttr('disabled');
+              createOptions(modelResData[i].years[0].styles, selectBoxes.trim);
+              selectBoxes.trim.removeAttr('disabled');
               break;
             }
           }
         });
       });
 
-      var engineSelect = $('.engine select');
-      var transmissionSelect = $('.transmission select');
-      trimSelect.change(function() {
+      selectBoxes.trim.change(function() {
         clearError('trim');
         $('.trim option:selected').each(function() {
           styleId = $(this).data('id');
@@ -335,15 +334,15 @@
             },
             function(res) {
               clearError('engine');
-              $.each(res['engines'], function(i) {
+              $.each(res.engines, function(i) {
                 $('<option/>')
-                  .text(res['engines'][i]['cylinder'] + ' Cyl ' + res['engines'][i]['size'] + ' Liter')
-                  .appendTo(engineSelect);
+                  .text(res.engines[i].cylinder + ' Cyl ' + res.engines[i].size + ' Liter')
+                  .appendTo(selectBoxes.engine);
               });
-              if (res['engines'].length == 1) {
+              if (res.engines.length == 1) {
                 $('#engine').val($('#engine option:eq(1)').val());
               }
-              engineSelect.removeAttr('disabled');
+              selectBoxes.engine.removeAttr('disabled');
             });
           $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + styleId + '/transmissions',
             {
@@ -352,15 +351,15 @@
             },
             function(res) {
               clearError('transmission');
-              $.each(res['transmissions'], function(i) {
+              $.each(res.transmissions, function(i) {
                 $('<option/>')
-                  .text(res['transmissions'][i]['transmissionType'])
-                  .appendTo(transmissionSelect);
+                  .text(res.transmissions[i].transmissionType)
+                  .appendTo(selectBoxes.transmission);
               });
-              if (res['transmissions'].length == 1) {
+              if (res.transmissions.length == 1) {
                 $('#transmission').val($('#transmission option:eq(1)').val());
               }
-              transmissionSelect.removeAttr('disabled');
+              selectBoxes.transmission.removeAttr('disabled');
             });
         });
       });
