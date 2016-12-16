@@ -99,8 +99,8 @@
       var selectFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var formFields = {};
-      requiredFields.forEach(function(field) {
-        formFields[field] = $('#' + field);
+      $.each(requiredFields, function() {
+        formFields[this] = $('#' + this);
       });
       for (var year = (new Date).getFullYear(); year >= 1990; year--) {
         $('<option/>')
@@ -109,7 +109,7 @@
       }
       var year, modelResData, id, styleId = null;
       var resultsTable = $('#results-table');
-      
+
       /*
        * Form Validation helper methods
        */
@@ -158,9 +158,9 @@
         // Form Validation
         var data = $(this).serializeObject();
         var hasError = false;
-        requiredFields.forEach(function(val) {
-          if (!data[val]) {
-            addError(val)
+        $.each(requiredFields, function() {
+          if (!data[this]) {
+            addError(this);
             hasError = true;
           }
         });
@@ -238,17 +238,17 @@
       }
 
       function createOptions(fieldList, selectEl) {
-        $.each(fieldList, function(i) {
+        $.each(fieldList, function() {
           var optionId = '';
           var modelYearId = '';
-          if (fieldList[i].hasOwnProperty('id')) {
-            optionId = fieldList[i].id;
+          if (this.hasOwnProperty('id')) {
+            optionId = this.id;
           }
-          if (fieldList[i].hasOwnProperty('years')) {
-            modelYearId = fieldList[i].years[0].id;
+          if (this.hasOwnProperty('years')) {
+            modelYearId = this.years[0].id;
           }
           $('<option/>')
-            .text(fieldList[i].name)
+            .text(this.name)
             .data('id', optionId)
             .data('modelyear', modelYearId)
             .appendTo(selectEl);
@@ -337,9 +337,9 @@
             },
             function(res) {
               clearError('engine');
-              $.each(res.engines, function(i) {
+              $.each(res.engines, function() {
                 $('<option/>')
-                  .text(res.engines[i].cylinder + ' Cyl ' + res.engines[i].size + ' Liter')
+                  .text(this.cylinder + ' Cyl ' + this.size + ' Liter')
                   .appendTo(formFields.engine);
               });
               if (res.engines.length == 1) {
@@ -354,9 +354,9 @@
             },
             function(res) {
               clearError('transmission');
-              $.each(res.transmissions, function(i) {
+              $.each(res.transmissions, function() {
                 $('<option/>')
-                  .text(res.transmissions[i].transmissionType)
+                  .text(this.transmissionType)
                   .appendTo(formFields.transmission);
               });
               if (res.transmissions.length == 1) {
