@@ -11,3 +11,5 @@ Things I would improve on:
 5. Add in live form validation 
 
 6. Clean up the way I store field data between all of the inputs
+
+7. Handle errors if any of the api calls errors out.
