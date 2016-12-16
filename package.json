@@ -1,0 +1,15 @@
+{
+  "name": "carapp",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dawnho/carapp.git"
+  },
+  "local-web-server": {
+    "port": 8100,
+    "forbid": "*.json"
+  },
+  "devDependencies": {
+    "local-web-server": "^1.2.6"
+  }
+}
