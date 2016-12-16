@@ -7,7 +7,11 @@ A simple app showing the maintenance schedule for a car~
 Clone the git repo:
 
 ```
-git clone https://github.com/dawnho/carapp.git CarApp
-cd .\CarApp
-npm install         # install a simple webserver with which to view things
+$ git clone https://github.com/dawnho/carapp.git CarApp
+$ cd .\CarApp
+$ npm install         # install a simple webserver with which to view things
 ```
+
+Save your api key into the variable `apiKey`
+
+`$ ws` to start a server

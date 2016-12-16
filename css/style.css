@@ -1,3 +1,11 @@
 #lookup-form select{
   text-transform: capitalize;
 }
+
+#lookup-form .help-block {
+  display: none;
+}
+
+#lookup-form .has-error .help-block {
+  display: block;
+}

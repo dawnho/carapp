@@ -14,88 +14,165 @@
 
   <body>
     <div class="container">
-      <div id="lookup-form">
-        <h1>Maintenance Schedule</h1>
+      <h1>Maintenance Schedule</h1>
+      <form id="lookup-form">
         <div class="year">
           <div class="form-group">
             <label class="control-label" for="year">Vehicle Year:</label>
-            <select class="form-control" id="year">
+            <select name="year" class="form-control" id="year">
               <option value="" disabled selected>Select Year</option>
             </select>
+            <span class="help-block">Please select a Year</span>
           </div>
         </div>
         <div class="make">
           <div class="form-group">
             <label class="control-label" for="make">Vehicle Make:</label>
-            <select class="form-control" id="make" disabled>
+            <select name="make" class="form-control" id="make" disabled>
               <option value="" disabled selected>Select Make</option>
             </select>
+            <span class="help-block">Please select a Make</span>
           </div>
         </div>
         <div class="model">
           <div class="form-group">
             <label class="control-label" for="model">Vehicle Model:</label>
-            <select class="form-control" id="model" disabled>
+            <select name="model" class="form-control" id="model" disabled>
               <option value="" disabled selected>Select Model</option>
             </select>
+            <span class="help-block">Please select a Model</span>
           </div>
         </div>
         <div class="trim">
           <div class="form-group">
             <label class="control-label" for="trim">Vehicle Trim:</label>
-            <select class="form-control" id="trim" disabled>
+            <select name="trim" class="form-control" id="trim" disabled>
               <option value="" disabled selected>Select Trim</option>
             </select>
+            <span class="help-block">Please select a Trim</span>
           </div>
         </div>
         <div class="engine">
           <div class="form-group">
             <label class="control-label" for="engine">Vehicle Engine:</label>
-            <select class="form-control" id="engine" disabled>
+            <select name="engine" class="form-control" id="engine" disabled>
               <option value="" disabled selected>Select Engine</option>
             </select>
+            <span class="help-block">Please select an Engine</span>
           </div>
         </div>
         <div class="transmission">
           <div class="form-group">
             <label class="control-label" for="transmission">Vehicle Transmission:</label>
-            <select class="form-control" id="transmission" disabled>
+            <select name="transmission" class="form-control" id="transmission" disabled>
               <option value="" disabled selected>Select Transmission</option>
             </select>
+            <span class="help-block">Please select a Transmission</span>
           </div>
         </div>
         <div class="mileage">
           <div class="form-group">
             <label class="control-label" for="mileage">Current Mileage:</label>
-            <input type="text" id="mileage" class="form-control" placeholder="ex. 45,000">
+            <input name="mileage" type="text" id="mileage" class="form-control" placeholder="ex. 45,000">
+            <span class="help-block">Please fill in Valid Miles without exceeding 300,000 miles</span>
           </div>
         </div>
         <div class="zip">
           <div class="form-group">
             <label class="control-label" for="zip">Zip Code:</label>
-            <input type="text" id="zip" class="form-control" placeholder="ex. 94110">
+            <input name="zip" type="text" id="zip" class="form-control" placeholder="ex. 94110">
+            <span class="help-block">Please input your Zip Code with 5 digits</span>
           </div>
         </div>
         <div class="form-buttons">
           <button id="clear" class="btn btn-default btn-block">Clear</button>
           <button id="submit" type="submit" class="btn btn-primary btn-block">Go</button>
         </div>
-      </div>
+      </form>
       <div id="results-table">
       </div>
     </div>
     <script>
       var apiKey = 'y4hdend9nry4x2ghwvx76hmv';
       var clearableFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
+      var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var years = [];
       for (var i = (new Date).getFullYear(); i>= 1990; i--) {
         years.push(i);
       }
-      var year, modelResData, trim = null;
+      var year, modelResData, id, styleId = null;
+
+      // grabbed this method from
+      // http://stackoverflow.com/questions/1184624/convert-form-data-to-javascript-object-with-jquery
+      $.fn.serializeObject = function() {
+        var o = {};
+        var a = this.serializeArray();
+        $.each(a, function() {
+          if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+              o[this.name] = [o[this.name]];
+            }
+              o[this.name].push(this.value || '');
+            } else {
+              o[this.name] = this.value || '';
+            }
+        });
+        return o;
+      };
 
       $('#clear').click(function() {
         disableAndClearFrom('make');
         $('#year').val($('#year option:first').val());
+      });
+
+      function isInteger(input) {
+        return Math.floor(input) == input && $.isNumeric(input);
+      }
+
+      function addError(field) {
+        $('.' + field + ' .form-group').addClass('has-error');
+      }
+
+      function clearError(field) {
+        $('.' + field + ' .form-group').removeClass('has-error');
+      }
+
+
+      $('#lookup-form').on("submit", function(e) {
+        e.preventDefault();
+        $('.form-group').removeClass('has-error');
+        var data = $(this).serializeObject();
+        var hasError = false;
+        requiredFields.forEach(function(val) {
+          if (!data[val]) {
+            addError(val)
+            hasError = true;
+          }
+        });
+        if (!isInteger(data['mileage']) || data['mileage'] > 300000) {
+          addError('mileage');
+          hasError = true;
+        }
+        if (!isInteger(data['zip']) || data['zip'] > 100000 || data['zip'] < 10000) {
+          addError('zip');
+          hasError = true;
+        }
+
+        if (hasError) { return; }
+
+        $.get('http://api.edmunds.com/v1/api/maintenance/actionrepository/findbymodelyearid',
+            {
+              modelyearid: id,
+              fmt: 'json',
+              api_key: apiKey
+            },
+            function(res) {
+              if (res['actionHolder'].length < 1) {
+                $('#results-table').text('Maintenance schedule could not be found for this vehicle.');
+              }
+              console.log(res['actionHolder']);
+              $('#results-table').text(res['actionHolder']);
+            });
       });
 
       function clearSelect(fieldName) {
@@ -107,13 +184,18 @@
       }
       function createOptions(fieldList, selectEl) {
         $.each(fieldList, function(i) {
-          var id = '';
+          var optionId = '';
+          var modelYearId = '';
           if (fieldList[i].hasOwnProperty('id')) {
-            id = fieldList[i]['id'];
+            optionId = fieldList[i]['id'];
+          }
+          if (fieldList[i].hasOwnProperty('years')) {
+            modelYearId = fieldList[i]['years'][0]['id'];
           }
           $('<option/>')
             .text(fieldList[i]['name'])
-            .data('id', id)
+            .data('id', optionId)
+            .data('modelyear', modelYearId)
             .appendTo(selectEl);
         });
       }
@@ -134,6 +216,7 @@
 
       var makeSelect = $('.make select');
       yearSelect.change(function() {
+        clearError('year');
         $('.year option:selected').each(function() {
           year = $(this).text();
           $.get('http://api.edmunds.com/api/vehicle/v2/makes',
@@ -152,6 +235,7 @@
 
       var modelSelect = $('.model select');
       makeSelect.change(function() {
+        clearError('make');
         $('.make option:selected').each(function() {
           $.get('http://api.edmunds.com/api/vehicle/v2/' + $(this).text() + '/models',
             {
@@ -170,8 +254,10 @@
 
       var trimSelect = $('.trim select');
       modelSelect.change(function() {
+        clearError('model');
         $('.model option:selected').each(function() {
           model = $(this).text();
+          id = $(this).data('modelyear');
           for (var i = 0; i < modelResData.length; i++) {
             if (modelResData[i].name == model) {
               disableAndClearFrom('trim');
@@ -186,14 +272,16 @@
       var engineSelect = $('.engine select');
       var transmissionSelect = $('.transmission select');
       trimSelect.change(function() {
+        clearError('trim');
         $('.trim option:selected').each(function() {
-          id = $(this).data('id');
-          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + id + '/engines',
+          styleId = $(this).data('id');
+          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + styleId + '/engines',
             {
               fmt: 'json',
               api_key: apiKey
             },
             function(res) {
+              clearError('engine');
               $.each(res['engines'], function(i) {
                 $('<option/>')
                   .text(res['engines'][i]['cylinder'] + ' Cyl ' + res['engines'][i]['size'] + ' Liter')
@@ -204,12 +292,13 @@
               }
               engineSelect.removeAttr('disabled');
             });
-          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + id + '/transmissions',
+          $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + styleId + '/transmissions',
             {
               fmt: 'json',
               api_key: apiKey
             },
             function(res) {
+              clearError('transmission');
               $.each(res['transmissions'], function(i) {
                 $('<option/>')
                   .text(res['transmissions'][i]['transmissionType'])
@@ -221,6 +310,14 @@
               transmissionSelect.removeAttr('disabled');
             });
         });
+      });
+
+      $('.mileage input').focus(function () {
+        clearError('mileage');
+      });
+
+      $('.zip input').focus(function () {
+        clearError('zip');
       });
     </script>
   </body>
