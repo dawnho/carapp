@@ -9,3 +9,5 @@ Things I would improve on:
 4. Add in helper text for the inputs, that shows the requirements for those fields, ex. mileage should not exceed 300,000
 
 5. Add in live form validation 
+
+6. Clean up the way I store field data between all of the inputs
