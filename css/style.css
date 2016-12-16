@@ -9,3 +9,7 @@
 #lookup-form .has-error .help-block {
   display: block;
 }
+
+#lookup-form {
+  margin-bottom: 60px;
+}

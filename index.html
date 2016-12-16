@@ -85,22 +85,40 @@
           </div>
         </div>
         <div class="form-buttons">
-          <button id="clear" class="btn btn-default btn-block">Clear</button>
-          <button id="submit" type="submit" class="btn btn-primary btn-block">Go</button>
+          <button id="clear" class="btn btn-default btn-block">Clear Form</button>
+          <button id="submit" type="submit" class="btn btn-primary btn-block">Search</button>
         </div>
       </form>
-      <div id="results-table">
-      </div>
+
+      <table id="results-table" class="table table-hover table-striped table-condensed">
+      </table>
+      <div id="form-errors"></div>
     </div>
     <script>
-      var apiKey = 'y4hdend9nry4x2ghwvx76hmv';
+      var apiKey = 'ENTER_API_KEY_HERE';
       var clearableFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var years = [];
+      var resultsTable = $('#results-table');
       for (var i = (new Date).getFullYear(); i>= 1990; i--) {
         years.push(i);
       }
       var year, modelResData, id, styleId = null;
+
+      /*
+       * Form Validation helper methods
+       */
+      function isInteger(input) {
+        return Math.floor(input) == input && $.isNumeric(input);
+      }
+
+      function addError(field) {
+        $('.' + field + ' .form-group').addClass('has-error');
+      }
+
+      function clearError(field) {
+        $('.' + field + ' .form-group').removeClass('has-error');
+      }
 
       // grabbed this method from
       // http://stackoverflow.com/questions/1184624/convert-form-data-to-javascript-object-with-jquery
@@ -120,27 +138,18 @@
         return o;
       };
 
-      $('#clear').click(function() {
-        disableAndClearFrom('make');
-        $('#year').val($('#year option:first').val());
-      });
-
-      function isInteger(input) {
-        return Math.floor(input) == input && $.isNumeric(input);
-      }
-
-      function addError(field) {
-        $('.' + field + ' .form-group').addClass('has-error');
-      }
-
-      function clearError(field) {
-        $('.' + field + ' .form-group').removeClass('has-error');
-      }
-
-
+      /*
+       * Form Submission and Clearing
+       */
       $('#lookup-form').on("submit", function(e) {
         e.preventDefault();
+
+        // Clear form
+        $('#form-errors').text('');
+        $('#results-table').text('');
         $('.form-group').removeClass('has-error');
+
+        // Form Validation
         var data = $(this).serializeObject();
         var hasError = false;
         requiredFields.forEach(function(val) {
@@ -160,6 +169,7 @@
 
         if (hasError) { return; }
 
+        // Passing form data to api
         $.get('http://api.edmunds.com/v1/api/maintenance/actionrepository/findbymodelyearid',
             {
               modelyearid: id,
@@ -168,13 +178,46 @@
             },
             function(res) {
               if (res['actionHolder'].length < 1) {
-                $('#results-table').text('Maintenance schedule could not be found for this vehicle.');
+                $('#form-errors').text('Maintenance schedule could not be found for this vehicle.');
               }
+
+              // Setting up headers
+              var thead = $('<thead/>')
+                .appendTo(resultsTable);
+              var tr = $('<tr/>')
+                .appendTo(thead);
+              $('<th/>')
+                .text('Labor Action')
+                .appendTo(tr);
+              $('<th/>')
+                .text('Item')
+                .appendTo(tr);
+
+              // Feeding in the data
+              res['actionHolder'].forEach(function(el) {
+                var tbody = $('<thead/>')
+                .appendTo(resultsTable);
+                var tr = $('<tr/>')
+                  .appendTo(tbody);
+                $('<td/>')
+                  .text(el.action)
+                  .appendTo(tr);
+                $('<td/>')
+                  .text(el.item)
+                  .appendTo(tr);
+              });
               console.log(res['actionHolder']);
-              $('#results-table').text(res['actionHolder']);
             });
       });
 
+      $('#clear').click(function() {
+        disableAndClearFormFieldsFrom('make');
+        $('#year').val($('#year option:first').val());
+      });
+
+      /*
+       * Form filling helper methods
+       */
       function clearSelect(fieldName) {
         $('.' + fieldName + ' select')
           .find('option')
@@ -182,6 +225,7 @@
           .end()
           .append('<option value="" disabled selected>Select ' + fieldName + '</option>');
       }
+
       function createOptions(fieldList, selectEl) {
         $.each(fieldList, function(i) {
           var optionId = '';
@@ -199,7 +243,8 @@
             .appendTo(selectEl);
         });
       }
-      function disableAndClearFrom(field) {
+
+      function disableAndClearFormFieldsFrom(field) {
         var index = $.inArray(field, clearableFields);
         for (var i = index; i < clearableFields.length; i++) {
           $('#' + clearableFields[i]).prop('disabled', true);
@@ -207,6 +252,9 @@
         }
       }
 
+      /*
+       * Form field action methods
+       */
       var yearSelect = $('.year select');
       $.each(years, function(i) {
         $('<option/>')
@@ -226,7 +274,7 @@
               api_key: apiKey
             },
             function(res) {
-              disableAndClearFrom('make');
+              disableAndClearFormFieldsFrom('make');
               createOptions(res['makes'], makeSelect);
               makeSelect.prop('disabled', false);
             });
@@ -245,7 +293,7 @@
             },
             function(res) {
               modelResData = res['models'];
-              disableAndClearFrom('model');
+              disableAndClearFormFieldsFrom('model');
               createOptions(res['models'], modelSelect);
               modelSelect.removeAttr('disabled');
             });
@@ -260,7 +308,7 @@
           id = $(this).data('modelyear');
           for (var i = 0; i < modelResData.length; i++) {
             if (modelResData[i].name == model) {
-              disableAndClearFrom('trim');
+              disableAndClearFormFieldsFrom('trim');
               createOptions(modelResData[i]['years'][0]['styles'], trimSelect);
               trimSelect.removeAttr('disabled');
               break;
