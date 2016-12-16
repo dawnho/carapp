@@ -98,17 +98,18 @@
       var apiKey = 'ENTER_API_KEY_HERE';
       var selectFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission'];
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
-      var years = [];
-      for (var i = (new Date).getFullYear(); i>= 1990; i--) {
-        years.push(i);
-      }
-      var year, modelResData, id, styleId = null;
-      var resultsTable = $('#results-table');
       var formFields = {};
       requiredFields.forEach(function(field) {
         formFields[field] = $('#' + field);
       });
-
+      for (var year = (new Date).getFullYear(); year >= 1990; year--) {
+        $('<option/>')
+          .text(year)
+          .appendTo(formFields.year);
+      }
+      var year, modelResData, id, styleId = null;
+      var resultsTable = $('#results-table');
+      
       /*
        * Form Validation helper methods
        */
@@ -273,12 +274,6 @@
       /*
        * Form field action methods
        */
-      $.each(years, function(i) {
-        $('<option/>')
-          .text(years[i])
-          .appendTo(formFields.year);
-      });
-
       formFields.year.change(function() {
         clearError('year');
         $('.year option:selected').each(function() {
