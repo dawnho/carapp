@@ -100,6 +100,7 @@
       var requiredFields = ['year', 'make', 'model', 'trim', 'engine', 'transmission', 'mileage', 'zip'];
       var years = [];
       var resultsTable = $('#results-table');
+
       for (var i = (new Date).getFullYear(); i>= 1990; i--) {
         years.push(i);
       }
@@ -210,8 +211,12 @@
             });
       });
 
-      $('#clear').click(function() {
+      $('#clear').click(function(e) {
+        e.preventDefault();
         disableAndClearFormFieldsFrom('make');
+        $('.form-group').removeClass('has-error');
+        $('#mileage').val('');
+        $('#zip').val('');
         $('#year').val($('#year option:first').val());
       });
 
