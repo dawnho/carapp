@@ -222,7 +222,7 @@
         $('.form-group').removeClass('has-error');
         formFields.mileage.val('');
         formFields.zip.val('');
-        formFields.year.val($('#year option:first').val());
+        selectNthOptionInField('year', 0);
       });
 
       /*
@@ -257,9 +257,17 @@
       function disableAndClearFormFieldsFrom(field) {
         var index = $.inArray(field, selectFields);
         for (var i = index; i < selectFields.length; i++) {
-          $('#' + selectFields[i]).prop('disabled', true);
+          formFields[selectFields[i]].prop('disabled', true);
           resetSelectOptions(selectFields[i]);
         }
+      }
+
+      function enableField(field) {
+        formFields[field].removeAttr('disabled');
+      }
+
+      function selectNthOptionInField(field, n) {
+        formFields[field].val($('#' + field + ' option:eq(' + n + ')').val());
       }
 
       /*
@@ -284,7 +292,7 @@
             function(res) {
               disableAndClearFormFieldsFrom('make');
               createOptions(res.makes, formFields.make);
-              formFields.make.prop('disabled', false);
+              enableField('make');
             });
         });
       });
@@ -302,7 +310,7 @@
               modelResData = res.models;
               disableAndClearFormFieldsFrom('model');
               createOptions(res.models, formFields.model);
-              formFields.model.removeAttr('disabled');
+              enableField('model');
             });
         });
       });
@@ -316,7 +324,7 @@
             if (modelResData[i].name == model) {
               disableAndClearFormFieldsFrom('trim');
               createOptions(modelResData[i].years[0].styles, formFields.trim);
-              formFields.trim.removeAttr('disabled');
+              enableField('trim');
               break;
             }
           }
@@ -340,9 +348,9 @@
                   .appendTo(formFields.engine);
               });
               if (res.engines.length == 1) {
-                $('#engine').val($('#engine option:eq(1)').val());
+                selectNthOptionInField('engine', 1);
               }
-              formFields.engine.removeAttr('disabled');
+              enableField('engine');
             });
           $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + styleId + '/transmissions',
             {
@@ -357,9 +365,9 @@
                   .appendTo(formFields.transmission);
               });
               if (res.transmissions.length == 1) {
-                $('#transmission').val($('#transmission option:eq(1)').val());
+                selectNthOptionInField('transmission', 1);
               }
-              formFields.transmission.removeAttr('disabled');
+              enableField('transmission');
             });
         });
       });
