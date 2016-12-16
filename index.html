@@ -214,6 +214,10 @@
                   .appendTo(tr);
               });
               console.log(res.actionHolder);
+            })
+            .fail(function(e) {
+              alert('Something went wrong! Please reload page and try again.');
+              console.log(e);
             });
       });
 
@@ -288,6 +292,10 @@
               disableAndClearFormFieldsFrom('make');
               createOptions(res.makes, formFields.make);
               enableField('make');
+            })
+            .fail(function(e) {
+              alert('Something went wrong! Please reload page and try again.');
+              console.log(e);
             });
         });
       });
@@ -306,6 +314,10 @@
               disableAndClearFormFieldsFrom('model');
               createOptions(res.models, formFields.model);
               enableField('model');
+            })
+            .fail(function(e) {
+              alert('Something went wrong! Please reload page and try again.');
+              console.log(e);
             });
         });
       });
@@ -346,6 +358,10 @@
                 selectNthOptionInField('engine', 1);
               }
               enableField('engine');
+            })
+            .fail(function(e) {
+              alert('Something went wrong! Please reload page and try again.');
+              console.log(e);
             });
           $.get('http://api.edmunds.com/api/vehicle/v2/styles/' + styleId + '/transmissions',
             {
@@ -363,6 +379,10 @@
                 selectNthOptionInField('transmission', 1);
               }
               enableField('transmission');
+            })
+            .fail(function(e) {
+              alert('Something went wrong! Please reload page and try again.');
+              console.log(e);
             });
         });
       });
