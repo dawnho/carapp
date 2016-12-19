@@ -164,7 +164,7 @@
             hasError = true;
           }
         });
-        if (!isInteger(data.mileage) || data.mileage > 300000) {
+        if (!isInteger(data.mileage) || data.mileage > 300000 || data.mileage < 0) {
           addError('mileage');
           hasError = true;
         }
